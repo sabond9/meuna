@@ -16,4 +16,6 @@ if __name__ == '__main__':
         meuna.start()
 
         time.sleep(random.randint(SLEEP_FROM, SLEEP_TO))
+        
+    print("\n\nSubscribe to me –– https://t.me/sybilwave")
 
