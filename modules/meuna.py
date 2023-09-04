@@ -48,6 +48,7 @@ class Meuna(Account):
         logger.info(f"[{self.address}] Make swap")
 
         self.approve(amount, HAY_ADDRESS, ROUTER_CONTRACT)
+        time.sleep(random.randint(5, 20))
 
         tx = self.get_tx_data()
         tx.update({"nonce": self.w3.eth.get_transaction_count(self.address)})
@@ -70,7 +71,7 @@ class Meuna(Account):
         self.wait_until_tx_finished(txn_hash.hex())
 
         receipts = self.w3.eth.get_transaction_receipt(txn_hash.hex())
-        token_out = int(receipts["logs"][2]["data"].hex(), 0)
+        token_out = int(receipts["logs"][1]["data"].hex(), 0)
 
         time.sleep(random.randint(SLEEP_ACTION_FROM, SLEEP_ACTION_TO))
 
@@ -89,6 +90,7 @@ class Meuna(Account):
             ).call()
 
             self.approve(amount, MEUNA_TOKEN, ROUTER_CONTRACT)
+            time.sleep(random.randint(5, 20))
 
             tx = self.get_tx_data()
             tx.update({"nonce": self.w3.eth.get_transaction_count(self.address)})
@@ -122,6 +124,7 @@ class Meuna(Account):
         balance = self.get_balance(MEUNA_LP_TOKEN)
 
         self.approve(balance["balance_wei"], MEUNA_LP_TOKEN, ROUTER_CONTRACT)
+        time.sleep(random.randint(5, 20))
 
         tx = self.get_tx_data()
         tx.update({"nonce": self.w3.eth.get_transaction_count(self.address)})
@@ -151,6 +154,7 @@ class Meuna(Account):
         amount = int(balance["balance_wei"] * 0.1)
 
         self.approve(balance["balance_wei"], MEUNA_LP_TOKEN, DEPOSIT_CONTRACT)
+        time.sleep(random.randint(5, 20))
 
         tx = self.get_tx_data()
         tx.update({"nonce": self.w3.eth.get_transaction_count(self.address)})
@@ -158,7 +162,7 @@ class Meuna(Account):
         conract = self.get_contract(DEPOSIT_CONTRACT, DEPOSIT_ABI)
 
         transaction = conract.functions.deposit(
-            10,
+            0,
             amount
         ).build_transaction(tx)
 
@@ -178,6 +182,7 @@ class Meuna(Account):
         amount = random.randint(int(amount*0.1), int(amount*0.5))
 
         self.approve(amount, MEUNA_LP_TOKEN, DEPOSIT_CONTRACT)
+        time.sleep(random.randint(5, 20))
 
         tx = self.get_tx_data()
         tx.update({"nonce": self.w3.eth.get_transaction_count(self.address)})
@@ -185,7 +190,7 @@ class Meuna(Account):
         conract = self.get_contract(DEPOSIT_CONTRACT, DEPOSIT_ABI)
 
         transaction = conract.functions.withdraw(
-            10,
+            0,
             amount
         ).build_transaction(tx)
 
@@ -206,7 +211,9 @@ class Meuna(Account):
         ration = Web3.to_wei(random.randint(150, 200), "ether")
 
         self.approve(amount, HAY_ADDRESS, SHORT_CONTRACT)
+        time.sleep(random.randint(5, 20))
         self.approve(amount, MEUNA_TOKEN, SHORT_CONTRACT)
+        time.sleep(random.randint(5, 20))
 
         tx = self.get_tx_data()
         tx.update({"nonce": self.w3.eth.get_transaction_count(self.address)})

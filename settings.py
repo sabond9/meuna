@@ -1,4 +1,4 @@
-RPC = "https://endpoints.omniatech.io/v1/bsc/testnet/public"
+RPC = "https://opbnb-testnet-rpc.bnbchain.org"
 
 # RANDOM WALLETS MODE
 RANDOM_WALLET = False  # True or False
