@@ -241,7 +241,7 @@ class Meuna(Account):
 
         token_out = self.swap(HAY_ADDRESS, MEUNA_TOKEN)
 
-        self.add_liquidity(HAY_ADDRESS, MEUNA_TOKEN, token_out)
+        self.add_liquidity(MEUNA_TOKEN, HAY_ADDRESS, token_out)
 
         self.remove_liquidity(HAY_ADDRESS, MEUNA_TOKEN)
 
