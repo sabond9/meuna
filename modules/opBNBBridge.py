@@ -2,6 +2,7 @@ import random
 import time
 
 from loguru import logger
+from web3 import Web3
 
 from config import DEPOSIT_OPBNB_ABI, DEPOSIT_OPBNB_CONTRACT
 from modules import Account
@@ -25,7 +26,7 @@ class OpBNBBridge(Account):
 
         contract = self.get_contract(DEPOSIT_OPBNB_CONTRACT, DEPOSIT_OPBNB_ABI)
         tx = self.get_tx_data()
-
+        tx.update({"value": Web3.to_wei(0.08, "ether")})
         tx.update({"nonce": self.w3.eth.get_transaction_count(self.address)})
 
         transaction = contract.functions.depositETH(MIN_GAS_VALUE, b'').build_transaction(tx)

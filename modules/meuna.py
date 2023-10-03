@@ -26,12 +26,12 @@ class Meuna(Account):
     def mint_token(self):
         logger.info(f"[{self.address}] Mint tokens")
 
-        contract = self.get_contract(DEPOSIT_OPBNB_CONTRACT, DEPOSIT_OPBNB_ABI)
-        tx = self.get_tx_data()
+        contract = self.get_contract(FAUCET_CONTRACT, FAUCET_ABI)
 
+        tx = self.get_tx_data()
         tx.update({"nonce": self.w3.eth.get_transaction_count(self.address)})
 
-        transaction = contract.functions.depositETH().build_transaction(tx)
+        transaction = contract.functions.claim().build_transaction(tx)
 
         signed_txn = self.sign(transaction)
 
