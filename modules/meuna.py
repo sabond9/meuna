@@ -4,14 +4,14 @@ import time
 from loguru import logger
 from web3 import Web3
 from config import FAUCET_CONTRACT, FAUCET_ABI, HAY_ADDRESS, MEUNA_TOKEN, ROUTER_CONTRACT, ROUTER_ABI, DEPOSIT_CONTRACT, \
-    DEPOSIT_ABI, MEUNA_LP_TOKEN, SHORT_CONTRACT, SHORT_ABI
-from settings import SLEEP_ACTION_FROM, SLEEP_ACTION_TO
+    DEPOSIT_ABI, MEUNA_LP_TOKEN, SHORT_CONTRACT, SHORT_ABI, DEPOSIT_OPBNB_CONTRACT, DEPOSIT_OPBNB_ABI
+from settings import SLEEP_ACTION_FROM, SLEEP_ACTION_TO, OP_RPC
 from .account import Account
 
 
 class Meuna(Account):
     def __init__(self, private_key: str) -> None:
-        super().__init__(private_key=private_key)
+        super().__init__(private_key=private_key, rpc=OP_RPC)
 
         self.swap_contract = self.get_contract(ROUTER_CONTRACT, ROUTER_ABI)
 
@@ -19,19 +19,19 @@ class Meuna(Account):
         tx = {
             "chainId": self.w3.eth.chain_id,
             "from": self.address,
-            "gasPrice": self.w3.eth.gas_price
+            "gasPrice": self.w3.eth.gas_price,
         }
         return tx
 
     def mint_token(self):
         logger.info(f"[{self.address}] Mint tokens")
 
-        contract = self.get_contract(FAUCET_CONTRACT, FAUCET_ABI)
-
+        contract = self.get_contract(DEPOSIT_OPBNB_CONTRACT, DEPOSIT_OPBNB_ABI)
         tx = self.get_tx_data()
+
         tx.update({"nonce": self.w3.eth.get_transaction_count(self.address)})
 
-        transaction = contract.functions.claim().build_transaction(tx)
+        transaction = contract.functions.depositETH().build_transaction(tx)
 
         signed_txn = self.sign(transaction)
 
@@ -86,7 +86,7 @@ class Meuna(Account):
             liq_amount = self.swap_contract.functions.getAmountsIn(
                 amount_out,
                 [Web3.to_checksum_address(from_token),
-                Web3.to_checksum_address(to_token)]
+                 Web3.to_checksum_address(to_token)]
             ).call()
 
             self.approve(amount, MEUNA_TOKEN, ROUTER_CONTRACT)
@@ -179,7 +179,7 @@ class Meuna(Account):
     def withdraw(self, amount):
         logger.info(f"[{self.address}] Make withdraw")
 
-        amount = random.randint(int(amount*0.1), int(amount*0.5))
+        amount = random.randint(int(amount * 0.1), int(amount * 0.5))
 
         self.approve(amount, MEUNA_LP_TOKEN, DEPOSIT_CONTRACT)
         time.sleep(random.randint(5, 20))

@@ -7,15 +7,15 @@ from eth_account import Account as EthereumAccount
 from web3.exceptions import TransactionNotFound
 
 from config import ERC20_ABI
-from settings import RPC
+from settings import OP_RPC
 
 
 class Account:
-    def __init__(self, private_key: str) -> None:
+    def __init__(self, private_key: str, rpc: str) -> None:
         self.private_key = private_key
         self.explorer = "https://testnet.bscscan.com/tx/"
 
-        self.w3 = Web3(Web3.HTTPProvider(RPC))
+        self.w3 = Web3(Web3.HTTPProvider(rpc))
         self.account = EthereumAccount.from_key(private_key)
         self.address = self.account.address
 
